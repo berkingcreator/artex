@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YBG13™ | Artex </title>
+    <title>YBG13™ | ARTEX AI Code Generator</title>
     <style>
-        /* Apple Tarzı Minimalist Tasarım */
+        /* Apple-Style Minimalist Tasarım */
+        :root {
+            --apple-blue: #0071e3;
+            --bg-light: #f5f5f7;
+            --card-bg: #ffffff;
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,213 +22,266 @@
         }
 
         body {
-            background-color: #fbfbfd;
+            background-color: var(--bg-light);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #1d1d1f;
+            padding: 40px 20px;
         }
 
         .container {
-            width: 95%;
-            max-width: 1000px;
-            background: #ffffff;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* API Key Ayar Bölümü */
+        .api-settings {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .api-settings input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Ana Panel */
+        .main-card {
+            background: var(--card-bg);
             padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
-            border: 1px solid #f2f2f2;
+            border-radius: 28px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.05);
         }
 
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         header h1 {
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 600;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.8px;
             margin-bottom: 10px;
         }
 
         header p {
-            color: #86868b;
-            font-size: 16px;
+            color: var(--text-secondary);
         }
 
-        .input-section {
+        .input-group {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-bottom: 30px;
         }
 
         textarea {
             width: 100%;
-            height: 150px;
+            height: 140px;
             padding: 20px;
             border: 1px solid #d2d2d7;
-            border-radius: 18px;
+            border-radius: 16px;
             font-size: 17px;
-            outline: none;
-            transition: all 0.3s ease;
             background: #fcfcfd;
+            resize: none;
+            outline: none;
+            transition: 0.3s;
         }
 
         textarea:focus {
-            border-color: #0071e3;
-            background: #ffffff;
+            border-color: var(--apple-blue);
+            background: #fff;
             box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
         }
 
-        #generateBtn {
+        button {
             padding: 16px;
-            background-color: #0071e3;
+            background: var(--apple-blue);
             color: white;
             border: none;
-            border-radius: 14px;
-            font-size: 17px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
+            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        #generateBtn:hover {
-            background-color: #0077ed;
-            transform: scale(1.01);
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
-        #generateBtn:disabled {
-            background-color: #a1a1a6;
-            cursor: not-allowed;
+        button:active {
+            transform: translateY(0);
         }
 
-        .output-section {
+        /* Çıktı Alanı */
+        .output-container {
+            margin-top: 30px;
             background: #1e1e1e;
-            border-radius: 18px;
+            border-radius: 16px;
             overflow: hidden;
-            display: none; /* Başlangıçta gizli */
+            display: none;
         }
 
-        .code-header {
-            background: #333333;
-            padding: 12px 25px;
+        .output-header {
+            background: #333;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            color: #e0e0e0;
-            font-size: 14px;
+            color: #fff;
+            font-size: 13px;
         }
 
         pre {
-            padding: 25px;
-            overflow-x: auto;
+            padding: 20px;
             color: #d4d4d4;
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 14px;
             line-height: 1.6;
-            font-size: 15px;
         }
 
         footer {
-            margin-top: 40px;
             text-align: center;
-            font-size: 13px;
-            color: #86868b;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 20px;
         }
 
-        /* Loading animasyonu */
         .loader {
             display: none;
             text-align: center;
-            margin: 20px 0;
-            color: #0071e3;
+            padding: 20px;
             font-weight: 500;
+            color: var(--apple-blue);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Yazılım Yapay Zekası</h1>
-            <p>YBG13™ Teknolojisi ile kod üretin.</p>
-        </header>
-
-        <main>
-            <div class="input-section">
-                <textarea id="userInput" placeholder="Hangi kodları yazmamı istersiniz? (Örn: Modern bir navigasyon çubuğu yap)"></textarea>
-                <button id="generateBtn">Kodu Yazmaya Başla</button>
-            </div>
-
-            <div id="loader" class="loader">Yapay zeka kodu yazıyor...</div>
-
-            <div id="outputSection" class="output-section">
-                <div class="code-header">
-                    <span>Oluşturulan Kaynak Kodları</span>
-                    <button id="copyBtn" style="background:none; border:1px solid #555; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;">Kopyala</button>
-                </div>
-                <pre id="codeOutput"><code></code></pre>
-            </div>
-        </main>
-
-        <footer>
-            <p>© 2026 YBG13™ - Tüm Hakları Saklıdır.</p>
-        </footer>
+<div class="container">
+    <div class="api-settings">
+        <span style="font-size: 13px; font-weight: 600;">API ANAHTARI:</span>
+        <input type="password" id="apiKeyInput" placeholder="Anahtarınızı buraya yapıştırın (Tarayıcıda saklanır)">
+        <button id="saveKeyBtn" style="padding: 8px 15px; font-size: 12px;">Kaydet</button>
     </div>
 
-    <script>
-        const API_KEY = "AIzaSyCE6ePiS05D3ijKbnzpWe7U_eS5Sq3W7tg";
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    <div class="main-card">
+        <header>
+            <h1>Yazılım Yapay Zekası</h1>
+            <p>Hangi yazılım projesini başlatıyoruz?</p>
+        </header>
 
-        const generateBtn = document.getElementById('generateBtn');
-        const userInput = document.getElementById('userInput');
-        const codeOutput = document.getElementById('codeOutput');
-        const outputSection = document.getElementById('outputSection');
-        const loader = document.getElementById('loader');
+        <div class="input-group">
+            <textarea id="userInput" placeholder="Örn: Modern bir fotoğraf galeri bileşeni yaz. Minimalist olsun."></textarea>
+            <button id="generateBtn">Kodu Oluştur</button>
+        </div>
 
-        // AI'ya ne yapması gerektiğini öğreten SİSTEM TALİMATI
-        const systemInstruction = "Sen uzman bir Senior Full-Stack Yazılım Geliştiricisisin. Sadece HTML, CSS ve JavaScript kodları yazarsın. Kodların modern, minimalist (Apple tarzı) ve profesyonel olmalı. Açıklama yapma, sadece kod bloğunu ver.";
+        <div id="loader" class="loader">Kodlar yazılıyor, lütfen bekleyin...</div>
 
-        generateBtn.addEventListener('click', async () => {
-            const prompt = userInput.value.trim();
-            if (!prompt) return alert("Lütfen bir komut girin!");
+        <div id="outputSection" class="output-container">
+            <div class="output-header">
+                <span>YBG13™ AI Engine v1.0</span>
+                <span id="copyBtn" style="cursor:pointer; color: #0071e3;">Kodu Kopyala</span>
+            </div>
+            <pre id="codeOutput"></pre>
+        </div>
+    </div>
 
-            // UI Hazırlığı
-            generateBtn.disabled = true;
-            loader.style.display = "block";
-            outputSection.style.display = "none";
+    <footer>
+        <p>© 2026 YBG13™ - ARTEX</p>
+    </footer>
+</div>
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: `${systemInstruction}\n\nKullanıcı İsteği: ${prompt}` }]
-                        }]
-                    })
-                });
+<script>
+    // 1. Ayarları Yönet
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const saveKeyBtn = document.getElementById('saveKeyBtn');
 
-                const data = await response.json();
-                const aiResponse = data.candidates[0].content.parts[0].text;
+    // Sayfa açıldığında varsa anahtarı getir
+    window.onload = () => {
+        const savedKey = localStorage.getItem('ybg13_ai_key');
+        if (savedKey) {
+            apiKeyInput.value = savedKey;
+        }
+    };
 
-                // Çıktıyı göster
-                codeOutput.innerText = aiResponse;
-                outputSection.style.display = "block";
-            } catch (error) {
-                console.error("Hata oluştu:", error);
-                alert("Kod oluşturulurken bir hata oluştu. API anahtarınızı veya bağlantınızı kontrol edin.");
-            } finally {
-                generateBtn.disabled = false;
-                loader.style.display = "none";
+    saveKeyBtn.onclick = () => {
+        localStorage.setItem('ybg13_ai_key', apiKeyInput.value);
+        alert("API Anahtarı tarayıcıya güvenle kaydedildi!");
+    };
+
+    // 2. AI İşlemleri
+    const generateBtn = document.getElementById('generateBtn');
+    const userInput = document.getElementById('userInput');
+    const codeOutput = document.getElementById('codeOutput');
+    const outputSection = document.getElementById('outputSection');
+    const loader = document.getElementById('loader');
+
+    const systemInstruction = "Sen bir Senior Full-Stack Yazılım Uzmanısın. Sadece HTML, CSS ve JavaScript kullanarak modern, premium beyaz temalı (Apple tarzı) kodlar yazarsın. Kodlar temiz ve çalışmaya hazır olmalı. Hiçbir açıklama yapma, sadece kodları ver.";
+
+    generateBtn.onclick = async () => {
+        const key = localStorage.getItem('ybg13_ai_key');
+        if (!key) return alert("Lütfen önce API anahtarınızı girin ve kaydedin!");
+
+        const prompt = userInput.value.trim();
+        if (!prompt) return alert("Lütfen ne yazılacağını belirtin.");
+
+        // UI Güncelle
+        generateBtn.disabled = true;
+        loader.style.display = "block";
+        outputSection.style.display = "none";
+
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: `${systemInstruction}\n\nİstek: ${prompt}` }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error.message);
             }
-        });
 
-        document.getElementById('copyBtn').addEventListener('click', () => {
-            navigator.clipboard.writeText(codeOutput.innerText);
-            alert("Kod kopyalandı!");
-        });
-    </script>
+            const result = data.candidates[0].content.parts[0].text;
+            codeOutput.innerText = result;
+            outputSection.style.display = "block";
+
+        } catch (error) {
+            alert("Hata: " + error.message);
+        } finally {
+            generateBtn.disabled = false;
+            loader.style.display = "none";
+        }
+    };
+
+    // Kopyalama Fonksiyonu
+    document.getElementById('copyBtn').onclick = () => {
+        navigator.clipboard.writeText(codeOutput.innerText);
+        alert("Kod başarıyla kopyalandı!");
+    };
+</script>
+
 </body>
 </html>
